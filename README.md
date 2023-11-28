@@ -1,4 +1,4 @@
-#	Microservice: API Costumers - Hibernate + Spring Boot + Swagger UI
+#	Microservice: API Custumers - Hibernate + Spring Boot + Swagger UI
 
 
 ##	Dependencies:
