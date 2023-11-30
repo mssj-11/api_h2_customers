@@ -16,5 +16,5 @@ public class CustomerEntity {
 	private long id;
 	private String name;
 	private String phone;
-
+	
 }
