@@ -1,6 +1,7 @@
 package com.mss.springboot.web.app.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +32,32 @@ public class CustomerController {
 	}
 	
 	@GetMapping("/{id}")
-	public CustomerEntity get(@PathVariable Long id){
-		return null;
+	public ResponseEntity<CustomerEntity> get(@PathVariable Long id){
+		Optional<CustomerEntity> customer = customerRespository.findById(id);
+	    
+	    if(customer.isPresent()) {
+	        return ResponseEntity.ok(customer.get());
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> put(@PathVariable Long id, @RequestBody CustomerEntity input){
-		return null;
+	public ResponseEntity<CustomerEntity> put(@PathVariable Long id, @RequestBody CustomerEntity updatedCustomer){
+	    Optional<CustomerEntity> existingCustomerOptional = customerRespository.findById(id);
+
+	    if (existingCustomerOptional.isPresent()) {
+	        CustomerEntity existingCustomer = existingCustomerOptional.get();
+	        existingCustomer.setName(updatedCustomer.getName()); // Actualiza los campos necesarios
+	        existingCustomer.setPhone(updatedCustomer.getPhone());
+
+	        CustomerEntity savedCustomer = customerRespository.save(existingCustomer);
+	        return ResponseEntity.ok(savedCustomer);
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
 	}
+
 	
 	@PostMapping
 	public ResponseEntity<?> post(@RequestBody CustomerEntity input){
@@ -48,7 +67,12 @@ public class CustomerController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id){
-		return null;
+		if (customerRespository.existsById(id)) {
+	        customerRespository.deleteById(id);
+	        return ResponseEntity.ok().build();
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
 	}
 	
 	
